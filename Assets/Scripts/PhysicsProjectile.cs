@@ -24,4 +24,17 @@ public class PhysicsProjectile : Projectile
     {
         _rigidbody.AddRelativeForce(Vector3.forward * weapon.GetShootingForce(), ForceMode.Impulse);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Destroy(gameObject);
+        // get all object that is taking the damage from the projectile
+        ITakeDamage[] damageTakers = other.GetComponentsInChildren<ITakeDamage>();
+
+        Debug.Log(damageTakers.Length);
+        foreach (var taker in damageTakers)
+        {
+            taker.TakeDamage(weapon, this, transform.position);
+        }
+    }
 }
