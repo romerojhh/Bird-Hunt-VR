@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 public class lb_Bird : MonoBehaviour {
 	enum birdBehaviors{
@@ -137,7 +139,7 @@ public class lb_Bird : MonoBehaviour {
 		anim.SetBool(landingBoolHash, false);
 
 		//Wait to apply velocity until the bird is entering the flying animation
-		while(anim.GetCurrentAnimatorStateInfo(0).nameHash != flyAnimationHash){
+		while(anim.GetCurrentAnimatorStateInfo(0).fullPathHash != flyAnimationHash){
 			yield return 0;
 		}
 
@@ -305,11 +307,22 @@ public class lb_Bird : MonoBehaviour {
 		anim.SetFloat (flyingDirectionHash,0);
 		//initiate the landing for the bird to finally reach the target
 		Vector3 vel = Vector3.zero;
-		flying = false;
-		landing = true;
 		solidCollider.enabled = false;
-		anim.SetBool(landingBoolHash, true);
-		anim.SetBool (flyingBoolHash,false);
+		if (controller.onlyFly)
+		{
+			flying = true;
+			landing = false;
+			anim.SetBool(landingBoolHash, landing);
+			anim.SetBool(flyingBoolHash, flying);
+		}
+		else
+		{
+			flying = false;
+			landing = true;
+			anim.SetBool(landingBoolHash, landing);
+			anim.SetBool(flyingBoolHash, flying);
+		}
+		
 		t = 0.0f;
 		GetComponent<Rigidbody>().velocity = Vector3.zero;
 
@@ -360,9 +373,9 @@ public class lb_Bird : MonoBehaviour {
 		if(!GetComponent<Rigidbody>().isKinematic){
 			GetComponent<Rigidbody>().isKinematic = true;
 		}
-		if(idle){
+		if(idle || controller.onlyFly){
 			//the bird is in the idle animation, lets randomly choose a behavior every 3 seconds
-			if (Random.value < Time.deltaTime*.33){
+			if (!controller.onlyFly && Random.value < Time.deltaTime*.33){
 				//bird will display a behavior
 				//in the perched state the bird can only sing, preen, or ruffle
 				float rand = Random.value;
@@ -385,11 +398,17 @@ public class lb_Bird : MonoBehaviour {
 				}else{
 					DisplayBehavior(birdBehaviors.sing);	
 				}
-				//lets alter the agitation level of the brid so it uses a different mix of idle animation next time
+				//lets alter the agitation level of the bird so it uses a different mix of idle animation next time
 				anim.SetFloat ("IdleAgitated",Random.value);
 			}
 			//birds should fly to a new target about every 10 seconds
-			if (Random.value < Time.deltaTime*.1){
+			if (!controller.onlyFly && Random.value < Time.deltaTime*.1){
+				FlyAway ();
+			}
+			else
+			{
+				// TODO: Make sure that there are no perch delay
+				// TODO: Disable landing animation
 				FlyAway ();
 			}
 		}
@@ -551,19 +570,28 @@ public class lb_Bird : MonoBehaviour {
 		}
 	}
 
-	void PlaySong(){
+	IEnumerator PlaySong(){
 		if (!dead){
+			yield return new WaitForSeconds(Random.Range(10f, 20f));
 			if(Random.value < .5){
 				GetComponent<AudioSource>().PlayOneShot (song1,1);
 			}else{
 				GetComponent<AudioSource>().PlayOneShot (song2,1);
 			}
+			yield return new WaitForSeconds(Random.Range(10f, 20f));
+			StartCoroutine(PlaySong());
 		}
 	}
 
-	void Update () {
-		if(onGround && !paused && !dead){
-			OnGroundBehaviors();	
+	private void Update () {
+		if(onGround && !paused && !dead)
+		{
+			OnGroundBehaviors();
 		}
+	}
+
+	private void Start()
+	{
+		StartCoroutine(PlaySong());
 	}
 }
