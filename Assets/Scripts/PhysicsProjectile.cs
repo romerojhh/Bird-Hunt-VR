@@ -27,6 +27,10 @@ public class PhysicsProjectile : Projectile
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("crow_scare_collider"))
+        {
+            return;
+        }
         Destroy(gameObject);
         // get all object that is taking the damage from the projectile
         ITakeDamage[] damageTakers = other.GetComponentsInChildren<ITakeDamage>();
@@ -36,5 +40,10 @@ public class PhysicsProjectile : Projectile
         {
             taker.TakeDamage(weapon, this, transform.position);
         }
+    }
+
+    public Weapon GetWeapon()
+    {
+        return this.weapon;
     }
 }

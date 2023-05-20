@@ -8,6 +8,8 @@ TagManager:
   - lb_groundTarget
   - lb_perchTarget
   - lb_flySpace
+  - pistol_bullet
+  - crow_scare_collider
   layers:
   - Default
   - TransparentFX

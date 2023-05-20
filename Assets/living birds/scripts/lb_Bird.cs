@@ -445,8 +445,12 @@ public class lb_Bird : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
-		if (col.tag == "lb_bird"){
+		if (col.CompareTag("lb_bird")){
 			FlyAway ();
+		} else if (col.CompareTag("pistol_bullet"))
+		{
+			PhysicsProjectile projectile = col.GetComponent<PhysicsProjectile>();
+			KillBirdWithForce(projectile.transform.forward * projectile.GetWeapon().GetShootingForce());
 		}
 	}
 
@@ -497,6 +501,7 @@ public class lb_Bird : MonoBehaviour {
 	public void KillBird(){
 		if(!dead){
 			controller.SendMessage ("FeatherEmit",transform.position);
+			controller.SendMessage("IncrementCounter");
 			anim.SetTrigger(dieTriggerHash);
 			anim.applyRootMotion = false;
 			dead = true;
@@ -516,24 +521,11 @@ public class lb_Bird : MonoBehaviour {
 	}
 
 	public void KillBirdWithForce(Vector3 force){
-		if(!dead){
-			controller.SendMessage ("FeatherEmit",transform.position);
-			anim.SetTrigger(dieTriggerHash);
-			anim.applyRootMotion = false;
-			dead = true;
-			onGround = false;
-			flying = false;
-			landing = false;
-			idle = false;
-			perched = false;
-			AbortFlyToTarget();
-			StopAllCoroutines();
-			GetComponent<Collider>().isTrigger = false;
-			birdCollider.center = new Vector3(0.0f,0.0f,0.0f);
-			birdCollider.size = new Vector3(0.1f,0.01f,0.1f)*controller.birdScale;
-			GetComponent<Rigidbody>().isKinematic = false;
-			GetComponent<Rigidbody>().useGravity = true;
-			GetComponent<Rigidbody>().AddForce (force);
+		KillBird();
+		// have to negate the dead var since we change it in KillBird()
+		if(dead){
+			// _rigidbody.AddForce(projectile.transform.forward * weapon.GetShootingForce(), ForceMode.Impulse);
+			GetComponent<Rigidbody>().AddForce (force, ForceMode.Impulse);
 		}
 	}
 

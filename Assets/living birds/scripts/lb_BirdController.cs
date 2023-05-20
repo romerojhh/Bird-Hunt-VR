@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class lb_BirdController : MonoBehaviour
 {
 	[SerializeField] public bool onlyFly = false;
+	[SerializeField] public Text scoreText;
 	public int idealNumberOfBirds;
 	public int maximumNumberOfBirds;
 	public Camera currentCamera;
@@ -365,6 +367,11 @@ public class lb_BirdController : MonoBehaviour
 				break;
 			}
 		}
+	}
+
+	private void IncrementCounter()
+	{
+		scoreText.text = int.Parse(scoreText.text) + 1 + "";
 	}
 
 	IEnumerator DeactivateFeathers(GameObject featherEmit){
