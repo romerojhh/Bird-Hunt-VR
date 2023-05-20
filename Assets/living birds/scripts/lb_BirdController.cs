@@ -22,6 +22,7 @@ public class lb_BirdController : MonoBehaviour
 	public bool goldFinch = true;
 	public bool crow = true;
 
+	private GameObject flyingSpace;
 	bool pause = false;
 	GameObject[] myBirds;
 	List<string> myBirdTypes = new List<string>();
@@ -85,6 +86,9 @@ public class lb_BirdController : MonoBehaviour
 		if (currentCamera == null){
 			currentCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 		}
+		
+		// get flying space
+		flyingSpace = GameObject.FindGameObjectWithTag("lb_flySpace");
 
 		if(idealNumberOfBirds >= maximumNumberOfBirds){
 			idealNumberOfBirds = maximumNumberOfBirds-1;
@@ -316,7 +320,7 @@ public class lb_BirdController : MonoBehaviour
 	void BirdFindTarget(GameObject bird){
 		//yield return new WaitForSeconds(1);
 		GameObject target;
-		if (birdGroundTargets.Count > 0 || birdPerchTargets.Count > 0){
+		if (!onlyFly && AreThereActiveTargets()){
 			//pick a random target based on the number of available targets vs the area of ground targets
 			//each perch target counts for .3 area, each ground target's area is calculated
 			float gtArea=0.0f;
@@ -334,8 +338,22 @@ public class lb_BirdController : MonoBehaviour
 			}
 		}else{
 			// TODO: Make custom range for x and z axis
-			bird.SendMessage ("FlyToTarget",currentCamera.transform.position+new Vector3(Random.Range (-20,20),Random.Range (5,10),Random.Range(-20,20)));
+			bird.SendMessage ("FlyToTarget",currentCamera.transform.position + GetRandomFlyingTarget());
 		}
+	}
+
+	// MAKE SURE THAT BOXCOLLIDER CENTER is (0,0,0) and TRANSFORM SCALE is (1,1,1)
+	private Vector3 GetRandomFlyingTarget()
+	{
+		
+		Vector3 boxColliderSize = flyingSpace.GetComponent<BoxCollider>().size;
+		Vector3 boxTransformPosition = flyingSpace.transform.position;
+		// transform scale * collider size
+
+		Vector3 upperBound = new Vector3(boxTransformPosition.x + boxColliderSize.x/2, boxTransformPosition.y + boxColliderSize.y/2, boxTransformPosition.z + boxColliderSize.z/2);
+		Vector3 lowerBound = new Vector3(boxTransformPosition.x - boxColliderSize.x/2, boxTransformPosition.y - boxColliderSize.y/2, boxTransformPosition.z - boxColliderSize.z/2);
+
+		return new Vector3(Random.Range(lowerBound.x, upperBound.x), Random.Range(lowerBound.y, upperBound.y), Random.Range(lowerBound.z, upperBound.z));
 	}
 
 	void FeatherEmit(Vector3 pos){
