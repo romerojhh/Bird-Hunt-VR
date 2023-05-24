@@ -11,5 +11,10 @@ public abstract class Projectile : MonoBehaviour
         this.weapon = weapon;
     }
 
+    public Weapon GetWeapon()
+    {
+        return weapon;
+    }
+
     public abstract void Launch();
 }

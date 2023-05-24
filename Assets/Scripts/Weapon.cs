@@ -34,7 +34,7 @@ public abstract class Weapon : MonoBehaviour
     protected abstract void StopShooting(DeactivateEventArgs arg0);
 
     protected abstract void StartShooting(ActivateEventArgs arg0);
-    protected virtual void Shoot()
+    public virtual void Shoot()
     {
         ApplyRecoil();
     }

@@ -14,7 +14,7 @@ public class Pistol : Weapon
         Shoot();
     }
 
-    protected override void Shoot()
+    public override void Shoot()
     {
         // TODO: Make the trigger animated (?)
         // GameObject trigger = this.transform.Find("Trigger").gameObject;
