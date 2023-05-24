@@ -7,6 +7,7 @@ public class Pistol : Weapon
 {
     [SerializeField] private Projectile bulletPrefab;
     [SerializeField] private AudioSource _gunSound;
+    [SerializeField] private ParticleSystem particleSystem;
     
     protected override void StartShooting(ActivateEventArgs arg0)
     {
@@ -25,6 +26,9 @@ public class Pistol : Weapon
         Projectile projectileInstance = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
         projectileInstance.Init(this);
         projectileInstance.Launch();
+        // ParticleSystem effect = Instantiate()
+        particleSystem.Stop();
+        particleSystem.Play();
     }
 
     protected override void StopShooting(DeactivateEventArgs arg0)
