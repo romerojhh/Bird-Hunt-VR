@@ -374,6 +374,11 @@ public class lb_BirdController : MonoBehaviour
 		scoreText.text = int.Parse(scoreText.text) + 1 + "";
 	}
 
+	public GameObject[] GetBirds()
+	{
+		return myBirds;
+	}
+
 	IEnumerator DeactivateFeathers(GameObject featherEmit){
 		yield return new WaitForSeconds(4.5f);
 		featherEmit.SetActive (false);

@@ -575,6 +575,11 @@ public class lb_Bird : MonoBehaviour {
 		}
 	}
 
+	public bool IsDead()
+	{
+		return dead;
+	}
+
 	private void Update () {
 		if(onGround && !paused && !dead)
 		{

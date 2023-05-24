@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Animations.Rigging;
 using Object = System.Object;
 using Random = UnityEngine.Random;
 
@@ -26,6 +27,8 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
     [SerializeField] private Transform shootingPosition;
     [SerializeField] private AudioClip hitSound;
     [SerializeField] private AudioClip deathSound;
+    [SerializeField] private bool targetBird;
+    [SerializeField] private MultiAimConstraint multiAimConstraint;
 
     private bool _isShooting;
     private int _currentShotsTaken;
@@ -46,6 +49,11 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
     private AudioSource _audioSource;
     private EnemySpawner _enemySpawner;
     private bool _isDead;
+    private lb_BirdController _birdController;
+    private Transform _target;
+    private lb_Bird _targetLBBird;
+    private List<ParticleSystem> _effects = new List<ParticleSystem>();
+    private RigBuilder _rigBuilder;
 
     private void Awake()
     {
@@ -56,30 +64,89 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
         _weapon = GetComponentInChildren<Weapon>();
         _audioSource = GetComponent<AudioSource>();
         _isDead = false;
+        _rigBuilder = GetComponent<RigBuilder>();
     }
     
     private void Update()
     {
-        // if AI is not stopped and close to the cover spot
-        if (!_agent.isStopped && (transform.position - _occupiedCoverSpot.position).sqrMagnitude <= 0.1f)
+        if (!_agent.isStopped)
         {
-            // make the AI stop walking to cover and shoot
-            _agent.isStopped = true;
-            StartCoroutine(InitializeShooting());
-        } 
+            if (_isDead)
+            {
+                _agent.isStopped = true;
+            } 
+            else if ((transform.position - _occupiedCoverSpot.position).sqrMagnitude <= 0.1f)
+            {
+                // make the AI stop walking to cover and shoot
+                _agent.isStopped = true;
+                StartCoroutine(InitializeShooting());
+            }
+        }
         else if (_isShooting)
         {
-            RotateTowardsPlayer();
+            if (targetBird)
+            {
+                RotateTowardsRandomBird();
+            }
+            else
+            {
+                RotateTowardsPlayer();
+            }
         }
+
+        
     }
     
+    /**
+     * called on SendMessage function call
+     */
     void SetController(EnemySpawner cont){
         _enemySpawner = cont;
     }
 
+    /**
+     * Rotate AI towards player
+     */
     private void RotateTowardsPlayer()
     {
-        Vector3 direction = _player.GetHeadPosition() - transform.position;
+        RotateTo(_player.GetHeadPosition());
+    }
+
+    /**
+     * Rotate AI towards random bird in lb_BirdController.myBirds
+     */
+    private void RotateTowardsRandomBird()
+    {
+        GameObject[] birds = _birdController.GetBirds();
+        // Point at random bird if the current target is null 
+        // or when current target is not active
+        if (_target == null || !_target.gameObject.activeSelf || _targetLBBird.IsDead())
+        {
+            // make so that we only points to active and alive bird
+            // TODO: Check infinity loop
+            while (true)
+            {
+                GameObject currBird = birds[Random.Range(0, birds.Length)];
+                lb_Bird currLbBird = currBird.GetComponent<lb_Bird>();
+                if (currBird.activeSelf && !currLbBird.IsDead())
+                {
+                    _target = currBird.transform;
+                    _targetLBBird = currLbBird;
+                    // set the direction so that the AI facing towards the bird
+                    multiAimConstraint.data.sourceObjects =  new WeightedTransformArray{new WeightedTransform(_target, 1f)};
+                    _rigBuilder.Build();
+                    break;
+                }
+            }
+        }
+
+        var position = _target.position;
+        RotateTo(position);
+    }
+
+    private void RotateTo(Vector3 target)
+    {
+        Vector3 direction = target - transform.position;
         direction.y = 0;
         Quaternion rotation = Quaternion.LookRotation(direction);
         rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
@@ -116,11 +183,21 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
      */
     public void Shoot()
     {
-        Debug.Log("Shoot called by AI");
         var hitPlayer = Random.Range(0, 100) <= shootingAccuracy;
-        Vector3 direction = _player.GetHeadPosition() - shootingPosition.localPosition;
 
-        if (!hitPlayer)
+        Vector3 direction;
+        
+        if (targetBird)
+        {
+            direction = _target.position - shootingPosition.localPosition;
+        }
+        else
+        {
+            direction = _player.GetHeadPosition() - shootingPosition.localPosition;
+        }
+
+        // 100% accuracy when AI targeting the bird
+        if (!hitPlayer && !targetBird)
         {
             // "Fake" attempt to miss the player
             direction += new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), Random.Range(-1, 1));
@@ -143,13 +220,18 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
     {
         _enemySpawner.SendMessage("RemoveEnemy", _occupiedCoverSpot);
         Destroy(gameObject);
+        foreach (var effect in _effects)
+        {
+            Destroy(effect);
+        }
     }
     
-    public void Init(Player player, Transform coverSpot)
+    public void Init(Player player, Transform coverSpot, lb_BirdController birdController)
     {
         _occupiedCoverSpot = coverSpot;
         _player = player;
         GetToCover();
+        _birdController = birdController;
     }
 
     /**
@@ -182,6 +264,7 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
         // Show splatter of blood everytime AI takes damage
         ParticleSystem effect = Instantiate(bloodSplatterFX, contactPoint,
             Quaternion.LookRotation(weapon.transform.position - contactPoint));
+        _effects.Add(effect);
         effect.Stop();
         effect.Play();
     }

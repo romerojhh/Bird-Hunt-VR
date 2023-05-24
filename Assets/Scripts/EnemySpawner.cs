@@ -12,6 +12,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float spawnInterval;
     [SerializeField] private int maxEnemiesNumber;
     [SerializeField] private Player player;
+    [SerializeField] private lb_BirdController birdController;
     
     private float _timeSinceLastSpawn;
     private Stack<Transform> _available = new Stack<Transform>();
@@ -58,7 +59,7 @@ public class EnemySpawner : MonoBehaviour
             Debug.LogError("Can't spawn new enemy, all space occupied");
             return;
         }
-        enemy.Init(player, _available.Pop());
+        enemy.Init(player, _available.Pop(), birdController);
     }
 
     /**
