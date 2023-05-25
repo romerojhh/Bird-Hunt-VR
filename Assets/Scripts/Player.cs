@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -29,5 +30,12 @@ public class Player : MonoBehaviour
     public Vector3 GetHeadPosition()
     {
         return head.position;
+    }
+    
+    // method to reset the scene
+    public static void ResetScene()
+    {
+        // Resetting scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

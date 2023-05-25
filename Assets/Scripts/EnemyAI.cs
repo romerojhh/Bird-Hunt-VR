@@ -254,6 +254,7 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
                 _audioSource.PlayOneShot(deathSound);
                 _animator.SetTrigger(DIE_TRIGGER);
                 _isDead = true;
+                multiAimConstraint.weight = 0f;
             }
         }
         else
