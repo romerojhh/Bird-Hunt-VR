@@ -10,6 +10,7 @@ TagManager:
   - lb_flySpace
   - pistol_bullet
   - crow_scare_collider
+  - pistol
   layers:
   - Default
   - TransparentFX

@@ -40,9 +40,5 @@ public class PhysicsProjectile : Projectile
             taker.TakeDamage(weapon, this, transform.position);
         }
     }
-
-    public Weapon GetWeapon()
-    {
-        return this.weapon;
-    }
+    
 }

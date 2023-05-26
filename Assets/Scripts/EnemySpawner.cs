@@ -16,9 +16,12 @@ public class EnemySpawner : MonoBehaviour
     
     private float _timeSinceLastSpawn;
     private Stack<Transform> _available = new Stack<Transform>();
+    private List<EnemyAI> _activeEnemies = new List<EnemyAI>();
+    private bool _currentlyDancing;
 
     private void Start()
     {
+        _currentlyDancing = false;
         _timeSinceLastSpawn = spawnInterval;
         foreach (var stuff in spawnPoints)
         {
@@ -37,7 +40,7 @@ public class EnemySpawner : MonoBehaviour
             // 3 - 2 < 1 F
             // 3 - 1 < 1 F
             // 3 - 0 < 1 F
-            if (_available.Count != 0 && spawnPoints.Length - _available.Count < maxEnemiesNumber)
+            if (_available.Count != 0 && spawnPoints.Length - _available.Count < maxEnemiesNumber && !_currentlyDancing)
             {
                 // Spawn enemy
                 SpawnEnemy();
@@ -50,8 +53,12 @@ public class EnemySpawner : MonoBehaviour
      */
     private void SpawnEnemy()
     {
+        // don't spawn new enemy when dancing is on progress
+        if (_currentlyDancing) return;
+        
         var transform1 = transform;
         EnemyAI enemy = Instantiate(enemyPrefab, transform1.position, transform1.rotation);
+        _activeEnemies.Add(enemy);
         enemy.SendMessage("SetController", this);
 
         if (_available.Count == 0)
@@ -69,5 +76,33 @@ public class EnemySpawner : MonoBehaviour
     private void RemoveEnemy(Transform unusedCover)
     {
         _available.Push(unusedCover);
+    }
+    
+    private void RemoveEnemy(EnemyAI enemy)
+    {
+        _activeEnemies.Remove(enemy);
+    }
+
+    /**
+     * This function called on red button on game
+     */
+    public void makeEnemyDance()
+    {
+        if (_currentlyDancing)
+        {
+            _currentlyDancing = false;
+            foreach (var enemy in _activeEnemies)
+            {
+                enemy.SendMessage("EndDance");
+            }
+        }
+        else
+        {
+            _currentlyDancing = true;
+            foreach (var enemy in _activeEnemies)
+            {
+                enemy.SendMessage("Dance");
+            }
+        }
     }
 }

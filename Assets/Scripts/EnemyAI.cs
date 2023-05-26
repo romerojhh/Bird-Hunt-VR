@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
@@ -14,6 +15,8 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
     const string CROUCH_TRIGGER = "Crouch";
     const string SHOOT_TRIGGER = "Shoot";
     const string DIE_TRIGGER = "Die";
+    const string DANCE_TRIGGER = "Dance";
+    private string _currTrigger;
 
     [SerializeField] private float startingHealth;
     // minimum and maximum time for enemy to stay in the cover
@@ -54,17 +57,22 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
     private lb_Bird _targetLBBird;
     private List<ParticleSystem> _effects = new List<ParticleSystem>();
     private RigBuilder _rigBuilder;
+    private bool _isDancing;
+    private Pistol _pistol;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _animator.SetTrigger(RUN_TRIGGER);
+        _currTrigger = RUN_TRIGGER;
         _agent = GetComponent<NavMeshAgent>();
         _health = startingHealth;
         _weapon = GetComponentInChildren<Weapon>();
         _audioSource = GetComponent<AudioSource>();
         _isDead = false;
         _rigBuilder = GetComponent<RigBuilder>();
+        _isDancing = false;
+        _pistol = GetComponentInChildren<Pistol>();
     }
     
     private void Update()
@@ -75,12 +83,16 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
             {
                 _agent.isStopped = true;
             } 
-            else if ((transform.position - _occupiedCoverSpot.position).sqrMagnitude <= 0.1f)
+            else if ((transform.position - _occupiedCoverSpot.position).sqrMagnitude <= 0.1f && !_isDancing)
             {
                 // make the AI stop walking to cover and shoot
                 _agent.isStopped = true;
                 StartCoroutine(InitializeShooting());
             }
+        }
+        else if (_isDancing)
+        {
+            RotateTowardsPlayer();
         }
         else if (_isShooting)
         {
@@ -93,8 +105,6 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
                 RotateTowardsPlayer();
             }
         }
-
-        
     }
     
     /**
@@ -158,6 +168,10 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
      */
     private IEnumerator<WaitForSeconds> InitializeShooting()
     {
+        if (_isDancing)
+        {
+            yield break;
+        }
         HideBehindCover();
         yield return new WaitForSeconds(Random.Range(minTimeUnderCover, maxTimeUnderCover));
         StartShooting();
@@ -165,15 +179,19 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
 
     private void HideBehindCover()
     {
+        if (_isDancing) { return; }
         _animator.SetTrigger(CROUCH_TRIGGER);
+        _currTrigger = CROUCH_TRIGGER;
     }
     
     private void StartShooting()
     {
+        if (_isDancing) { return; }
         _isShooting = true;
         _currentMaxShotsToTake = Random.Range(minShootsToTake, maxShootsToTake);
         _currentShotsTaken = 0;
         _animator.SetTrigger(SHOOT_TRIGGER);
+        _currTrigger = SHOOT_TRIGGER;
     }
 
     /**
@@ -183,6 +201,7 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
      */
     public void Shoot()
     {
+        if (_isDancing) { return; }
         var hitPlayer = Random.Range(0, 100) <= shootingAccuracy;
 
         Vector3 direction;
@@ -219,6 +238,7 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
     public void RemoveCorpse()
     {
         _enemySpawner.SendMessage("RemoveEnemy", _occupiedCoverSpot);
+        _enemySpawner.SendMessage("RemoveEnemy", gameObject.GetComponent<EnemyAI>());
         Destroy(gameObject);
         foreach (var effect in _effects)
         {
@@ -268,5 +288,54 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
         _effects.Add(effect);
         effect.Stop();
         effect.Play();
+    }
+    
+    private void Dance()
+    {
+        if (_isDead) {return;}
+
+        if (_isDancing)
+        {
+            EndDance();
+            return;
+        }
+        
+        StopAllCoroutines();
+        
+        // rotate to player
+        _isDancing = true;
+
+        // hide gun
+        _pistol.gameObject.SetActive(false);
+        
+        // stop navmesh
+        _agent.isStopped = true;
+        
+        // disable multiAimConstraint (look toward player)
+        multiAimConstraint.data.sourceObjects = new WeightedTransformArray{new WeightedTransform(_player.transform, 1f)};
+        _rigBuilder.Build();
+
+        // start animator dance
+        _animator.SetTrigger(DANCE_TRIGGER);
+    }
+
+    private void EndDance()
+    {
+        if (_isDead || !_isDancing) {return;}
+        
+        _isDancing = false;
+        
+        // restore all previous task
+        // show gun
+        _pistol.gameObject.SetActive(true);
+        
+        // resume navmesh
+        _agent.isStopped = false;
+
+        // enable multiAimConstraint
+        _target = null;
+        
+        // restart previous animation
+        _animator.SetTrigger(_currTrigger);
     }
 }
