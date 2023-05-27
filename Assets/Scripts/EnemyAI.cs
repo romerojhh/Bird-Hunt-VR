@@ -119,6 +119,12 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
      */
     private void RotateTowardsPlayer()
     {
+        if (_target == null)
+        {
+            _target = _player.transform;
+            multiAimConstraint.data.sourceObjects =  new WeightedTransformArray{new WeightedTransform(_target, 1f)};
+            _rigBuilder.Build();
+        }
         RotateTo(_player.GetHeadPosition());
     }
 
@@ -337,5 +343,17 @@ public class EnemyAI : MonoBehaviour, ITakeDamage
         
         // restart previous animation
         _animator.SetTrigger(_currTrigger);
+    }
+    
+    private void TargetPlayer()
+    {
+        _target = null;
+        targetBird = false;
+    }
+
+    private void TargetBird()
+    {
+        _target = null;
+        targetBird = true;
     }
 }

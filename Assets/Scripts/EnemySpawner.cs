@@ -18,10 +18,12 @@ public class EnemySpawner : MonoBehaviour
     private Stack<Transform> _available = new Stack<Transform>();
     private List<EnemyAI> _activeEnemies = new List<EnemyAI>();
     private bool _currentlyDancing;
+    private bool _targetPlayer;
 
     private void Start()
     {
         _currentlyDancing = false;
+        _targetPlayer = false;
         _timeSinceLastSpawn = spawnInterval;
         foreach (var stuff in spawnPoints)
         {
@@ -56,28 +58,31 @@ public class EnemySpawner : MonoBehaviour
         // don't spawn new enemy when dancing is on progress
         if (_currentlyDancing) return;
         
-        var transform1 = transform;
-        EnemyAI enemy = Instantiate(enemyPrefab, transform1.position, transform1.rotation);
-        _activeEnemies.Add(enemy);
-        enemy.SendMessage("SetController", this);
-
         if (_available.Count == 0)
         {
             Debug.LogError("Can't spawn new enemy, all space occupied");
             return;
         }
+        
+        var transform1 = transform;
+        EnemyAI enemy = Instantiate(enemyPrefab, transform1.position, transform1.rotation);
+        _activeEnemies.Add(enemy);
+        enemy.SendMessage("SetController", this);
+        enemy.SendMessage(_targetPlayer ? "TargetPlayer" : "TargetBird");
         enemy.Init(player, _available.Pop(), birdController);
     }
 
     /**
-     * 1st param type = EnemyAI
-     * 2nd param type = Transform
+     * Called on SendMessage
      */
     private void RemoveEnemy(Transform unusedCover)
     {
         _available.Push(unusedCover);
     }
     
+    /**
+     * Called on SendMessage
+     */
     private void RemoveEnemy(EnemyAI enemy)
     {
         _activeEnemies.Remove(enemy);
@@ -86,7 +91,7 @@ public class EnemySpawner : MonoBehaviour
     /**
      * This function called on red button on game
      */
-    public void makeEnemyDance()
+    public void MakeEnemyDance()
     {
         if (_currentlyDancing)
         {
@@ -102,6 +107,25 @@ public class EnemySpawner : MonoBehaviour
             foreach (var enemy in _activeEnemies)
             {
                 enemy.SendMessage("Dance");
+            }
+        }
+    }
+
+    public void TargetPlayer()
+    {
+        _targetPlayer = !_targetPlayer;
+        if (_targetPlayer)
+        {
+            foreach (var enemy in _activeEnemies)
+            {
+                enemy.SendMessage("TargetPlayer");
+            }
+        }
+        else
+        {
+            foreach (var enemy in _activeEnemies)
+            {
+                enemy.SendMessage("TargetBird");
             }
         }
     }
