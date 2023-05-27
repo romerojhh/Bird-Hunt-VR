@@ -306,7 +306,7 @@ public class lb_BirdController : MonoBehaviour
 		Vector3 ray = -currentCamera.transform.forward;
 		int loopCheck = 0;
 		//find a random ray pointing away from the cameras field of view
-		ray += new Vector3(Random.Range (-.5f,.5f),Random.Range (-.5f,.5f),Random.Range (-.5f,.5f));
+		ray += new Vector3(Random.Range (-.5f,.5f),Random.Range (-.5f,.5f),Random.Range (0,.5f));
 		//cycle through random rays until we find one that doesnt hit anything
 		while(Physics.Raycast(currentCamera.transform.position,ray,out hit,dist)){
 			dist = Random.Range (2,10);

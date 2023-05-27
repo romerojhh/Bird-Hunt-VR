@@ -177,7 +177,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d1597ed43aea23b40ad8bb8b95484d6c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.036
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d1597ed43aea23b40ad8bb8b95484d6c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1827,6 +1827,29 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1213082573}
   m_Mesh: {fileID: 4300000, guid: 8dca5595cdaced544b3bca78ca84e8d8, type: 3}
+--- !u!1 &1314529268 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7113899638027543835, guid: d7ce58144baa5e7478b681734602b192, type: 3}
+  m_PrefabInstance: {fileID: 1641196722}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1314529270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314529268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6b70cf8d6f4f94f931699457ea09a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraMain: {fileID: 1331573296}
+  cameraL: {fileID: 0}
+  cameraR: {fileID: 0}
+  cameraARL: {fileID: 0}
+  cameraARR: {fileID: 0}
+  cameraFollower: {fileID: 0}
 --- !u!1 &1331573290 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7113899637837543736, guid: d7ce58144baa5e7478b681734602b192, type: 3}
