@@ -10,6 +10,14 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform head;
     [SerializeField] private AudioSource hitSound;
 
+    private void Update()
+    {
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
+    }
+
     // TODO: Make so that when the health reach 0, game over menu is displayed
     public void TakeDamage(float damage)
     {

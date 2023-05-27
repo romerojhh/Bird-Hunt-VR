@@ -2276,7 +2276,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Poke Interaction Examples
+  m_Text: Options (esc to exit game)
 --- !u!222 &1377167916
 CanvasRenderer:
   m_ObjectHideFlags: 0
