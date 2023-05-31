@@ -14,8 +14,13 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey("escape"))
         {
-            Application.Quit();
+            ExitGame();
         }
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 
     // TODO: Make so that when the health reach 0, game over menu is displayed
