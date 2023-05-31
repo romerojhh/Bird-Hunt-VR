@@ -7,6 +7,7 @@ public class lb_BirdController : MonoBehaviour
 {
 	[SerializeField] public bool onlyFly = false;
 	[SerializeField] public Text scoreText;
+	[SerializeField] private Text killBirdText;
 	public int idealNumberOfBirds;
 	public int maximumNumberOfBirds;
 	public Camera currentCamera;
@@ -368,10 +369,31 @@ public class lb_BirdController : MonoBehaviour
 			}
 		}
 	}
+	
+	private string RemoveSubstrings(string input, params string[] substrings)
+	{
+		foreach (string substring in substrings)
+		{
+			input = input.Replace(substring, string.Empty);
+		}
 
+		return input;
+	}
+
+	/**
+	 * Used on lb_Bird.cs
+	 */
 	private void IncrementCounter()
 	{
 		scoreText.text = int.Parse(scoreText.text) + 1 + "";
+	}
+
+	/**
+	 * Used on lb_Bird.cs
+	 */
+	private void SendKillInfo(string birdName)
+	{
+		killBirdText.text = "You killed " + RemoveSubstrings(birdName, "lb_", "HQ", "(Clone)");
 	}
 
 	public GameObject[] GetBirds()

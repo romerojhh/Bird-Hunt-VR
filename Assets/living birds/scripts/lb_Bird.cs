@@ -502,6 +502,7 @@ public class lb_Bird : MonoBehaviour {
 		if(!dead){
 			controller.SendMessage ("FeatherEmit",transform.position);
 			controller.SendMessage("IncrementCounter");
+			controller.SendMessage("SendKillInfo", name);
 			anim.SetTrigger(dieTriggerHash);
 			anim.applyRootMotion = false;
 			dead = true;

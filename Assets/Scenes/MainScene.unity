@@ -248,6 +248,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1752252407}
     - target: {fileID: 11400000, guid: d1597ed43aea23b40ad8bb8b95484d6c, type: 3}
+      propertyPath: killBirdText
+      value: 
+      objectReference: {fileID: 592045972}
+    - target: {fileID: 11400000, guid: d1597ed43aea23b40ad8bb8b95484d6c, type: 3}
       propertyPath: currentCamera
       value: 
       objectReference: {fileID: 1331573296}
@@ -675,9 +679,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3493828257507802024, guid: 070a7b07142d4144b8858750fa200a4e, type: 3}
+      propertyPath: m_CullTransparentMesh
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5455776646204991864, guid: 070a7b07142d4144b8858750fa200a4e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7404776448657916662, guid: 070a7b07142d4144b8858750fa200a4e, type: 3}
+      propertyPath: m_CullTransparentMesh
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7579256198075269160, guid: 070a7b07142d4144b8858750fa200a4e, type: 3}
       propertyPath: m_Name
       value: ScoreBoard
+      objectReference: {fileID: 0}
+    - target: {fileID: 8831532195303906991, guid: 070a7b07142d4144b8858750fa200a4e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 070a7b07142d4144b8858750fa200a4e, type: 3}
@@ -1073,6 +1093,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7375689605917999670, guid: ea805784c03ea7840b3e56aadb18df3c, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7375689605917999671, guid: ea805784c03ea7840b3e56aadb18df3c, type: 3}
+      propertyPath: m_MovementType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7375689605917999671, guid: ea805784c03ea7840b3e56aadb18df3c, type: 3}
+      propertyPath: m_SmoothPosition
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea805784c03ea7840b3e56aadb18df3c, type: 3}
 --- !u!1 &327759621
@@ -1279,6 +1311,17 @@ Transform:
   m_Father: {fileID: 162407912}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &592045972 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4466249967632727147, guid: d7ce58144baa5e7478b681734602b192, type: 3}
+  m_PrefabInstance: {fileID: 1641196722}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -2731,6 +2774,38 @@ PrefabInstance:
     - target: {fileID: 3802884149940003546, guid: d7ce58144baa5e7478b681734602b192, type: 3}
       propertyPath: m_TrackingStateInput.m_Action.m_Name
       value: Tracking State Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 4466249966875184546, guid: d7ce58144baa5e7478b681734602b192, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9986361
+      objectReference: {fileID: 0}
+    - target: {fileID: 4466249966875184546, guid: d7ce58144baa5e7478b681734602b192, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.052210465
+      objectReference: {fileID: 0}
+    - target: {fileID: 4466249966875184546, guid: d7ce58144baa5e7478b681734602b192, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.0000015476062
+      objectReference: {fileID: 0}
+    - target: {fileID: 4466249966875184546, guid: d7ce58144baa5e7478b681734602b192, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.000000080911576
+      objectReference: {fileID: 0}
+    - target: {fileID: 4466249966875184546, guid: d7ce58144baa5e7478b681734602b192, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.0059
+      objectReference: {fileID: 0}
+    - target: {fileID: 4466249966875184546, guid: d7ce58144baa5e7478b681734602b192, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 5.986
+      objectReference: {fileID: 0}
+    - target: {fileID: 4466249967632727146, guid: d7ce58144baa5e7478b681734602b192, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4466249967632727147, guid: d7ce58144baa5e7478b681734602b192, type: 3}
+      propertyPath: m_Text
+      value: You haven't killed any bird
       objectReference: {fileID: 0}
     - target: {fileID: 7011064699245753934, guid: d7ce58144baa5e7478b681734602b192, type: 3}
       propertyPath: m_UseForceGrab
