@@ -1825,6 +1825,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WebXR SpectatorCameraHolder
       objectReference: {fileID: 0}
+    - target: {fileID: 8419806486223793991, guid: 3b93c96ad8426ba47b7e78f0d42010c7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8419806487189588588, guid: 3b93c96ad8426ba47b7e78f0d42010c7, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.591
@@ -1864,6 +1868,18 @@ PrefabInstance:
     - target: {fileID: 8419806487189588588, guid: 3b93c96ad8426ba47b7e78f0d42010c7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.597
+      objectReference: {fileID: 0}
+    - target: {fileID: 8419806487189588589, guid: 3b93c96ad8426ba47b7e78f0d42010c7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8419806487189588590, guid: 3b93c96ad8426ba47b7e78f0d42010c7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8419806487189588591, guid: 3b93c96ad8426ba47b7e78f0d42010c7, type: 3}
+      propertyPath: enableInXR
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b93c96ad8426ba47b7e78f0d42010c7, type: 3}
