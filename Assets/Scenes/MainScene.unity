@@ -2283,6 +2283,10 @@ PrefabInstance:
       value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 3802884149940003542, guid: d7ce58144baa5e7478b681734602b192, type: 3}
+      propertyPath: m_MaxHeight
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802884149940003542, guid: d7ce58144baa5e7478b681734602b192, type: 3}
       propertyPath: m_MinHeight
       value: 1.7
       objectReference: {fileID: 0}
@@ -2460,7 +2464,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8278265462014747109, guid: d7ce58144baa5e7478b681734602b192, type: 3}
       propertyPath: m_RequestedTrackingOriginMode
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8461912498579857511, guid: d7ce58144baa5e7478b681734602b192, type: 3}
       propertyPath: m_LocalPosition.x
