@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onlyFly: 0
   scoreText: {fileID: 0}
+  killBirdText: {fileID: 0}
   idealNumberOfBirds: 20
   maximumNumberOfBirds: 40
   currentCamera: {fileID: 0}
